@@ -101,7 +101,7 @@ class MainActivity : ComponentActivity() {
 
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = { /* Handle view details action */ }
+                    onClick = {}
                 ) {
                     Text("View Details")
                 }
