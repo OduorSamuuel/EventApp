@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
 
 data class Event(
-    val id: Int,
     val name: String,
     val date: String,
     val description: String,
@@ -49,9 +48,19 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun EventHubApp() {
         val events = listOf(
-            Event(1, "Art Exhibition", "Dec 15, 2024", "An exhibition showcasing modern art.", ""),
-            Event(2, "Tech Talk", "Dec 20, 2024", "A tech talk by industry leaders.", "https://example.com/tech_talk.jpg"),
-            Event(3, "Food Festival", "Dec 25, 2024", "Enjoy local and international cuisines.", "https://example.com/food_festival.jpg")
+            Event("Art Exhibition", "Dec 15, 2024", "An exhibition showcasing modern art.", ""),
+            Event(
+                "Tech Talk",
+                "Dec 20, 2024",
+                "A tech talk by industry leaders.",
+                "https://example.com/tech_talk.jpg"
+            ),
+            Event(
+                "Food Festival",
+                "Dec 25, 2024",
+                "Enjoy local and international cuisines.",
+                "https://example.com/food_festival.jpg"
+            )
         )
         EventList(events = events)
     }
@@ -159,5 +168,18 @@ class MainActivity : ComponentActivity() {
                 Text("Back to Events")
             }
         }
+    }
+
+    @Preview
+    @Composable
+    fun PreviewEventDetailsScreen() {
+        val sampleEvent = Event(
+            name = "Graduation Ceremony",
+            date = "December 15, 2024",
+            description = "Join us for the graduation ceremony of the class of 2024.",
+            poster_url = "https://example.com/poster.jpg"
+        )
+
+        EventDetailsScreen(event = sampleEvent)
     }
 }

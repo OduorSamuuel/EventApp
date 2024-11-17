@@ -1,26 +1,37 @@
+package com.example.eventapp
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.motion.widget.MotionScene.Transition.TransitionOnClick
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
+import coil.compose.rememberImagePainter
 
-class MainActivity : ComponentActivity() {
+class MainActivity2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -38,6 +49,7 @@ fun MyApp() {
         composable("schoolPage") { SchoolPage(navController) }
         composable("eventDetails") { EventDetailsPage(navController) }
         composable("notifications") { NotificationsPage(navController) }
+        composable("eventhub") { EventHubApp(navController)  }
     }
 }
 
@@ -86,7 +98,9 @@ fun HomePage(navController: NavHostController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Schools", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Text("See All", color = Color.Gray)
+            Button(onClick = {navController.navigate("SchoolPage") }) {
+                Text("See All")
+            }
         }
         Row(
             modifier = Modifier.padding(16.dp),
@@ -150,10 +164,8 @@ fun SchoolPage(navController: NavHostController) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text("SCES Events", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        repeat(4) {
-            EventListItem()
-        }
+        Text("Schools", fontSize = 20.sp)
+        SchoolList(navController = navController)
     }
 }
 
@@ -164,27 +176,64 @@ fun PreviewSchoolPage() {
 }
 
 @Composable
-fun EventListItem() {
+fun SchoolListItem(schoolName: String, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("Event Name")
+            Button(
+                onClick = onClick,
+                modifier = Modifier.fillMaxWidth() // Makes button take full width if needed
+                    .padding(0.dp)
+                    .size(60.dp),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(text = schoolName)
+            }
+        }
+    }
+}
+
+@Composable
+fun SchoolList(navController: NavController) {
+    val schoolNames = listOf(
+        "Strathmore University",
+        "Strathmore Institute of Management and Technology (SI)",
+        "Strathmore Institute of Mathematical Sciences (SIMS)",
+        "School of Tourism and Hospitality (STH)",
+        "School of Humanities and Social Sciences (SHSS)",
+        "School of Computing and Engineering Sciences (SCES)",
+        "Strathmore Law School (SLS)",
+        "Strathmore Business School (SBS)",
+        "Strathmore Clubs Events"
+    )
+
+    LazyColumn(modifier = Modifier.padding(8.dp)) {
+        items(schoolNames) { schoolName ->
+            SchoolListItem(schoolName = schoolName) {
+                // Navigate to "eventDetails" screen with NavController
+                navController.navigate("eventhub")
+            }
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewEventListItem() {
-    EventListItem()
+fun SchoolListPreview() {
+    // Placeholder for NavController in preview
+    val dummyNavController = rememberNavController()
+    SchoolList(navController = dummyNavController)
 }
+
 
 @Composable
 fun EventDetailsPage(navController: NavHostController) {
@@ -240,5 +289,143 @@ fun NotificationsPage(navController: NavHostController) {
 @Composable
 fun PreviewNotificationsPage() {
     NotificationsPage(navController = rememberNavController())
+}
+
+@Composable
+fun EventHubApp(navController: NavHostController) {
+    val events = listOf(
+        Event("Art Exhibition", "Dec 15, 2024", "An exhibition showcasing modern art.", ""),
+        Event(
+            "Tech Talk",
+            "Dec 20, 2024",
+            "A tech talk by industry leaders.",
+            "https://example.com/tech_talk.jpg"
+        ),
+        Event(
+            "Food Festival",
+            "Dec 25, 2024",
+            "Enjoy local and international cuisines.",
+            "https://example.com/food_festival.jpg"
+        )
+    )
+    EventList(events = events)
+}
+
+@Composable
+fun EventList(events: List<Event>) {
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(events) { event ->
+            EventItem(event = event)
+        }
+    }
+}
+
+@Composable
+fun EventItem(event: Event) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { /* Handle event click here */ }
+    ) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            // Use Image as before
+            Image(
+                painter = rememberImagePainter(event.poster_url),
+                contentDescription = "Event Image",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = event.name,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(8.dp)
+            )
+            Text(
+                text = event.date,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(8.dp)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                onClick = {}
+            ) {
+                Text("View Details")
+            }
+        }
+    }
+}
+
+@Composable
+fun EventDetailsScreen(event: Event) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        // Event Image (poster)
+        Image(
+            painter = rememberImagePainter(event.poster_url),
+            contentDescription = "Event Image",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp),
+            contentScale = ContentScale.Crop
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Event Title
+        Text(
+            text = event.name,
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
+        // Event Date
+        Text(
+            text = event.date,
+            style = MaterialTheme.typography.bodyLarge,
+            color = Color.Gray,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // Event Description (if available)
+        Text(
+            text = event.description,
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // Back Button to navigate back
+        Button(
+            onClick = { /* Implement back navigation logic */ },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text("Back to Events")
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewEventDetailsScreen() {
+    val sampleEvent = Event(
+        name = "Graduation Ceremony",
+        date = "December 15, 2024",
+        description = "Join us for the graduation ceremony of the class of 2024.",
+        poster_url = "https://example.com/poster.jpg"
+    )
+
+    EventDetailsScreen(event = sampleEvent)
 }
 

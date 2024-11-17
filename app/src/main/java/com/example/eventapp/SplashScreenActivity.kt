@@ -1,5 +1,6 @@
 package com.example.eventapp
 
+
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -12,7 +13,7 @@ class SplashScreenActivity : Activity(){
         setContentView(R.layout.activity_splash)
 
         Handler().postDelayed({
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, MainActivity2::class.java)
             startActivity(intent)
             finish()},2000)
         }
