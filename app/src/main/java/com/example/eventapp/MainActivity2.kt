@@ -30,6 +30,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.NavHost
 import coil.compose.rememberImagePainter
+import androidx.compose.ui.draw.clip
+
 
 class MainActivity2 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +50,9 @@ fun MyApp() {
         composable("homepage") { HomePage(navController) }
         composable("schoolPage") { SchoolPage(navController) }
         composable("eventDetails") { EventDetailsPage(navController) }
+        composable("eventDetails1") { EventDetailsPage1(navController) }
+        composable("eventDetails2") { EventDetailsPage2(navController) }
+        composable("eventDetails3") { EventDetailsPage3(navController) }
         composable("notifications") { NotificationsPage(navController) }
         composable("eventhub") { EventHubApp(navController)  }
     }
@@ -98,15 +103,16 @@ fun HomePage(navController: NavHostController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Schools", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-            Button(onClick = {navController.navigate("SchoolPage") }) {
+            Button(onClick = { navController.navigate("SchoolPage") }) {
                 Text("See All")
             }
         }
+
         Row(
             modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            repeat(4) {
+            repeat(2) {
                 Box(
                     modifier = Modifier
                         .size(50.dp)
@@ -114,14 +120,31 @@ fun HomePage(navController: NavHostController) {
                 )
             }
         }
-        Text("Top Events", modifier = Modifier.padding(16.dp), fontWeight = FontWeight.Bold)
-        repeat(2) {
-            EventCard(navController)
+
+        // Top Events section
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("Top Events", fontWeight = FontWeight.Bold)
+            // Display the events in a vertical column
+            repeat(1) { // 2 + 2 + 2 events
+                EventCard(navController)
+            }
+            repeat(1) { // 2 + 2 + 2 events
+                EventCard1(navController)
+            }
         }
+
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Most Recent", modifier = Modifier.padding(16.dp), fontWeight = FontWeight.Bold)
-        repeat(2) {
-            EventCard(navController)
+
+        // Most Recent section
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text("Most Recent", fontWeight = FontWeight.Bold)
+            repeat(1) {
+                EventCard2(navController)
+            }
+            repeat(1) {
+                EventCard3(navController)
+            }
+
         }
     }
 }
@@ -140,13 +163,96 @@ fun EventCard(navController: NavHostController) {
             .padding(8.dp),
         shape = RoundedCornerShape(8.dp)
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("Event Name")
-            Text("Event Date", color = Color.Gray)
-            Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = { navController.navigate("eventDetails") }) {
-                Text("View Details")
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f) // Allocates remaining space for text
+            ) {
+                Text("STEM Fair")
+                Text("15th Nov, 2024", color = Color.Gray)
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { navController.navigate("eventDetails") }) {
+                    Text("View Details")
+                }
             }
+            Spacer(modifier = Modifier.width(8.dp))
+            Image(
+                painter = painterResource(id = R.drawable.stem), // Replace with your image resource
+                contentDescription = "STEM Fair Image",
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+        }
+    }
+}
+
+@Composable
+fun EventCard1(navController: NavHostController) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Cultural Week")
+                Text("25th - 29th Nov, 2024", color = Color.Gray)
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { navController.navigate("eventDetails1") }) {
+                    Text("View Details")
+                }
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Image(
+                painter = painterResource(id = R.drawable.culture), // Replace with your image resource
+                contentDescription = "Cultural Week Image",
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+        }
+    }
+}
+
+@Composable
+fun EventCard2(navController: NavHostController) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Sports Day")
+                Text("30th Nov, 2024", color = Color.Gray)
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { navController.navigate("eventDetails2") }) {
+                    Text("View Details")
+                }
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+            Image(
+                painter = painterResource(id = R.drawable.sports), // Replace with your image resource
+                contentDescription = "Sports Day Image",
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
         }
     }
 }
@@ -156,6 +262,62 @@ fun EventCard(navController: NavHostController) {
 fun PreviewEventCard() {
     EventCard(navController = rememberNavController())
 }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEventCard1() {
+    EventCard1(navController = rememberNavController())
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEventCard2() {
+    EventCard2(navController = rememberNavController())
+}
+
+
+
+@Composable
+fun EventCard3(navController: NavHostController) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically // Aligns text and image
+        ) {
+            Column(
+                modifier = Modifier.weight(1f) // Ensures the text occupies remaining space
+            ) {
+                Text("Art and Music Festival")
+                Text("2nd December, 2024", color = Color.Gray)
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = { navController.navigate("eventDetails3") }) {
+                    Text("View Details")
+                }
+            }
+            Spacer(modifier = Modifier.width(8.dp)) // Adds spacing between text and image
+            Image(
+                painter = painterResource(id = R.drawable.musicfest), // Replace with your image resource
+                contentDescription = "Event Image",
+                modifier = Modifier
+                    .size(64.dp) // Adjust the size as needed
+                    .clip(RoundedCornerShape(8.dp))
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEventCard3() {
+    EventCard3(navController = rememberNavController())
+}
+
+
 
 @Composable
 fun SchoolPage(navController: NavHostController) {
@@ -243,16 +405,64 @@ fun EventDetailsPage(navController: NavHostController) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Graduation Day", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text("January 7th", color = Color.Gray)
+        // Title
+        Text(
+            text = "STEM Fair",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Text(
+            text = "15th Nov, 2024",
+            color = Color.Gray,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        // Event Details
+        Text("Location: Auditorium", modifier = Modifier.padding(bottom = 8.dp))
+        Text(
+            text = "To promote interest in science, technology, engineering, and mathematics by showcasing student projects and experiments.",
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        Text("School: SCES and SIMS", modifier = Modifier.padding(bottom = 16.dp))
+
+        // Button Row
+        Button(
+            onClick = { /* Add to notifications */ },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text("Add to Notifications")
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEventDetailsPage() {
+    EventDetailsPage(navController = rememberNavController())
+}
+
+
+@Composable
+fun EventDetailsPage1(navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Cultural week", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text("25th - 29th Nov, 2024", color = Color.Gray)
         Spacer(modifier = Modifier.height(16.dp))
         Text("Location: Graduation Square")
-        Text("School: SCES")
+        Text("School: Open to all ")
+        Text(" To celebrate diversity by highlighting the different cultures represented within the school community.")
+
         Row(
             modifier = Modifier.padding(top = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Guests")
+
             Button(onClick = { /* Add to notifications */ }) {
                 Text("Add to Notifications")
             }
@@ -262,8 +472,68 @@ fun EventDetailsPage(navController: NavHostController) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewEventDetailsPage() {
-    EventDetailsPage(navController = rememberNavController())
+fun PreviewEventDetailsPage1() {
+    EventDetailsPage1(navController = rememberNavController())
+}
+
+@Composable
+fun EventDetailsPage2(navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Sports Day", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text("30th Nov, 2024", color = Color.Gray)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("Location: Sports Ground")
+        Text("School: All students")
+        Text("To promote physical activity, teamwork, and school spirit through competitive and non-competitive sports.")
+
+        Row(
+            modifier = Modifier.padding(top = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Button(onClick = { /* Add to notifications */ }) {
+                Text("Add to Notifications")
+            }
+        }
+    }
+}
+
+@Composable
+fun EventDetailsPage3(navController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Career Day", fontSize = 24.sp, fontWeight = FontWeight.Bold)
+        Text("2nd December, 2024", color = Color.Gray)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text("Location: Graduation Square")
+        Text("School: Open to all students ")
+        Text("To help students explore career options by interacting with professionals from various fields.")
+
+        Row(
+            modifier = Modifier.padding(top = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Button(onClick = { /* Add to notifications */ }) {
+                Text("Add to Notifications")
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewEventDetailsPage3() {
+    EventDetailsPage3(navController = rememberNavController())
 }
 
 @Composable
@@ -310,6 +580,15 @@ fun EventHubApp(navController: NavHostController) {
     )
     EventList(events = events)
 }
+
+@Preview(showBackground = true)
+@Composable
+fun EventHubAppPreview() {
+    // Mock NavController for preview
+    val navController = rememberNavController()
+    EventHubApp(navController = navController)
+}
+
 
 @Composable
 fun EventList(events: List<Event>) {
