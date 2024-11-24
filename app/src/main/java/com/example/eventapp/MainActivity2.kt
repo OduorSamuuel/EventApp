@@ -108,18 +108,47 @@ fun HomePage(navController: NavHostController) {
             }
         }
 
+        // Define a data class for items
+        data class RoundedItem(val imageRes: Int, val text: String)
+
+// Sample list of items
+        val items = listOf(
+            RoundedItem(R.drawable.sces, "SCES"),
+            RoundedItem(R.drawable.sims, "SIMS"),
+            RoundedItem(R.drawable.law, "LAW"),g
+            RoundedItem(R.drawable.shss, "SHSS")
+        )
+
         Row(
             modifier = Modifier.padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            repeat(2) {
-                Box(
-                    modifier = Modifier
-                        .size(50.dp)
-                        .background(Color.LightGray, RoundedCornerShape(25.dp))
-                )
+            items.forEach { item ->
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(RoundedCornerShape(25.dp))
+                            .background(Color.LightGray)
+                    ) {
+                        Image(
+                            painter = painterResource(id = item.imageRes),
+                            contentDescription = null,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = item.text,
+
+                    )
+                }
             }
         }
+
 
         // Top Events section
         Column(modifier = Modifier.padding(16.dp)) {
