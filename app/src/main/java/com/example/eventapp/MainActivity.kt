@@ -22,164 +22,35 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.layout.ContentScale
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.eventapp.components.NavigationComponent
 
-data class Event(
-    val name: String,
-    val date: String,
-    val description: String,
-    val poster_url: String
-)
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen()
+
         setContent {
             EventHubApp()
         }
     }
+}
+
+@Composable
+fun EventHubApp(
+    navController: NavHostController = rememberNavController()
+) {
+    NavigationComponent(navController = navController)
+}
 
     @Preview(showBackground = true)
     @Composable
     fun DefaultPreview() {
-        EventHubApp()
+       // EventHubApp()
     }
 
-    @Composable
-    fun EventHubApp() {
-        val events = listOf(
-            Event("Art Exhibition", "Dec 15, 2024", "An exhibition showcasing modern art.", ""),
-            Event(
-                "Tech Talk",
-                "Dec 20, 2024",
-                "A tech talk by industry leaders.",
-                "https://example.com/tech_talk.jpg"
-            ),
-            Event(
-                "Food Festival",
-                "Dec 25, 2024",
-                "Enjoy local and international cuisines.",
-                "https://example.com/food_festival.jpg"
-            )
-        )
-        EventList(events = events)
-    }
 
-    @Composable
-    fun EventList(events: List<Event>) {
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(events) { event ->
-                EventItem(event = event)
-            }
-        }
-    }
-
-    @Composable
-    fun EventItem(event: Event) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .clickable { /* Handle event click here */ }
-        ) {
-            Column(modifier = Modifier.padding(8.dp)) {
-                // Use Image as before
-                Image(
-                    painter = rememberImagePainter(event.poster_url),
-                    contentDescription = "Event Image",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(150.dp),
-                    contentScale = androidx.compose.ui.layout.ContentScale.Crop
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = event.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(8.dp)
-                )
-                Text(
-                    text = event.date,
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(8.dp)
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Button(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = {}
-                ) {
-                    Text("View Details")
-                }
-            }
-        }
-    }
-
-    @Composable
-    fun EventDetailsScreen(event: Event) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            // Event Image (poster)
-            Image(
-                painter = rememberImagePainter(event.poster_url),
-                contentDescription = "Event Image",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(250.dp),
-                contentScale = ContentScale.Crop
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Event Title
-            Text(
-                text = event.name,
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            // Event Date
-            Text(
-                text = event.date,
-                style = MaterialTheme.typography.bodyLarge,
-                color = Color.Gray,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            // Event Description (if available)
-            Text(
-                text = event.description,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            // Back Button to navigate back
-            Button(
-                onClick = { /* Implement back navigation logic */ },
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                Text("Back to Events")
-            }
-        }
-    }
-
-    @Preview
-    @Composable
-    fun PreviewEventDetailsScreen() {
-        val sampleEvent = Event(
-            name = "Graduation Ceremony",
-            date = "December 15, 2024",
-            description = "Join us for the graduation ceremony of the class of 2024.",
-            poster_url = "https://example.com/poster.jpg"
-        )
-
-        EventDetailsScreen(event = sampleEvent)
-    }
-}

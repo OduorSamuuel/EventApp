@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.EventApp" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Main App Theme -->
+    <style name="Theme.EventApp" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- Add any customizations for the main theme here -->
+    </style>
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.EventApp.Splash" parent="Theme.SplashScreen">
+
+        <item name="windowSplashScreenBackground">@color/white</item>
+
+        <!-- Animated logo or static image -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/eventhub_logo</item>
+
+
+
+        <!-- Post-splash screen theme to transition to -->
+        <item name="postSplashScreenTheme">@style/Theme.EventApp</item>
+    </style>
+
 </resources>
