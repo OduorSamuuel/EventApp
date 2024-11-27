@@ -26,6 +26,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.eventapp.components.NavigationComponent
+import com.example.eventapp.ui.theme.EventAppTheme
 import com.google.firebase.FirebaseApp
 
 
@@ -46,8 +47,12 @@ class MainActivity : ComponentActivity() {
 fun EventHubApp(
     navController: NavHostController = rememberNavController()
 ) {
-    NavigationComponent(navController = navController)
+    EventAppTheme {
+        // Your app content here
+        NavigationComponent(navController = navController)
+    }
 }
+
 
     @Preview(showBackground = true)
     @Composable
