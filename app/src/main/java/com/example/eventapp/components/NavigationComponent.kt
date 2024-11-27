@@ -126,7 +126,7 @@ fun NavigationComponent(
             composable(Screen.Calendar.route) {
                 CalendarScreen(
                     navController = navController,
-                    paddingValues = paddingValues
+                    //paddingValues = paddingValues
                 )
             }
 

@@ -49,9 +49,7 @@ android {
         }
     }
 }
-
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -73,9 +71,16 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation ("androidx.navigation:navigation-compose:2.8.3")
+    //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
+    implementation("io.github.boguszpawlowski.composecalendar:composecalendar:1.0.0")
+
+
+    // separate artifact with utilities for working with kotlinx-datetime
+    implementation("io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.3.0")
+    // Using the stable version of Compose Calendar
+    //implementation("com.kizitonwose.calendar:compose:2.6.0")
+
+    implementation("androidx.navigation:navigation-compose:2.8.3")
     implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("androidx.compose.material:material-icons-extended:1.6.0")
-    //implementation("androidx.compose.foundation:foundation-pager:1.6.0-alpha01")
-
 }

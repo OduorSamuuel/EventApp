@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Sports
@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -29,36 +30,45 @@ fun SchoolsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background) // Use theme background
+            .background(MaterialTheme.colorScheme.background)
+            .padding(16.dp)
     ) {
-        // Top bar with Back Button and Title
+        // Row for Back Icon
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background) // Consistent background color
-                .padding(vertical = 16.dp, horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                imageVector = Icons.Filled.ArrowBack, // Corrected icon import
                 contentDescription = "Back",
                 modifier = Modifier
                     .size(24.dp)
                     .clickable { navController.navigateUp() },
-                tint = MaterialTheme.colorScheme.primary // Use theme primary color
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "SCES Events",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onBackground // Use theme onBackground color
+                tint = MaterialTheme.colorScheme.primary
             )
         }
 
-        // LazyColumn for event items
+        // Row for Title
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text(
+                text = "School Events",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+        }
+
+        // LazyColumn for Event Items
         LazyColumn(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(events) { event ->
@@ -66,6 +76,7 @@ fun SchoolsScreen(
                     event = event,
                     onClick = {
                         // TODO: Implement navigation to event details
+                        // Example: navController.navigate("event_details/${event.title}")
                     }
                 )
             }
@@ -73,27 +84,26 @@ fun SchoolsScreen(
     }
 }
 
-// Static data for events
 private val events = listOf(
     Event(
         icon = Icons.Filled.School,
         title = "Graduation Day",
-        backgroundColor = Color(0xFFE6F2FF) // Light blue for Graduation Day
+        backgroundColor = Color(0xFFE6F2FF)
     ),
     Event(
         icon = Icons.Filled.Star,
         title = "Prize Giving",
-        backgroundColor = Color(0xFFFFF3E0) // Light orange for Prize Giving
+        backgroundColor = Color(0xFFFFF3E0)
     ),
     Event(
         icon = Icons.Filled.Sports,
         title = "Sports Day",
-        backgroundColor = Color(0xFFF0F4F8) // Light grayish-blue for Sports Day
+        backgroundColor = Color(0xFFF0F4F8)
     ),
     Event(
         icon = Icons.Filled.EmojiEvents,
         title = "Sports Gala",
-        backgroundColor = Color(0xFFF0E6FF) // Light purple for Sports Gala
+        backgroundColor = Color(0xFFF0E6FF)
     )
 )
 
@@ -106,8 +116,8 @@ private fun EventItem(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp)),
-        shadowElevation = 4.dp,
-        color = event.backgroundColor // Event-specific background color
+        shadowElevation = 2.dp,
+        color = event.backgroundColor
     ) {
         Row(
             modifier = Modifier
@@ -116,12 +126,12 @@ private fun EventItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Icon container with a subtle background
+            // Colored icon background
             Box(
                 modifier = Modifier
                     .size(48.dp)
                     .background(
-                        color = event.backgroundColor.copy(alpha = 0.3f), // Semi-transparent background
+                        color = event.backgroundColor.copy(alpha = 0.3f),
                         shape = RoundedCornerShape(8.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -130,23 +140,22 @@ private fun EventItem(
                     imageVector = event.icon,
                     contentDescription = event.title,
                     modifier = Modifier.size(32.dp),
-                    tint = MaterialTheme.colorScheme.primary // Use theme primary color for icons
+                    tint = MaterialTheme.colorScheme.primary
                 )
             }
 
             Text(
                 text = event.title,
                 style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.onSurface // Use theme onSurface color
+                fontWeight = FontWeight.SemiBold
             )
         }
     }
 }
 
-// Data class for Event
+// Fixed the type of icon from String to ImageVector
 data class Event(
-    val icon: androidx.compose.ui.graphics.vector.ImageVector,
+    val icon: ImageVector, // Changed to ImageVector
     val title: String,
     val backgroundColor: Color
 )
