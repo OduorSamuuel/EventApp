@@ -1,9 +1,6 @@
 package com.example.eventapp.screens
 
 import android.annotation.SuppressLint
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -12,10 +9,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Event
-import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,13 +28,22 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.Month
 import java.time.format.DateTimeFormatter
+
+// Event data class
+data class Event1(
+    val date: LocalDate,
+    val title: String,
+    val backgroundColor: Color
+)
 
 @SuppressLint("NewApi")
 @Composable
-fun CalendarScreen(navController: NavHostController) {
-    var selectedDate by remember { mutableStateOf<LocalDate>(LocalDate.now()) }
+fun CalendarScreen(
+    navController: NavHostController,
+    initialSelectedDate: LocalDate = LocalDate.now()
+) {
+    var selectedDate by remember { mutableStateOf(initialSelectedDate) }
     var eventsForSelectedDate by remember { mutableStateOf<List<Event1>>(emptyList()) }
 
     // Sample static events
@@ -44,7 +54,6 @@ fun CalendarScreen(navController: NavHostController) {
         Event1(LocalDate.parse("2024-12-01"), "Sports Gala", Color(0xFFF0E6FF))
     )
 
-    // Display the calendar
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +77,7 @@ fun CalendarScreen(navController: NavHostController) {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Calendar grid (days of the month)
+        // Calendar Grid
         CalendarGrid(
             selectedDate = selectedDate,
             onDateClick = { date ->
@@ -85,7 +94,7 @@ fun CalendarScreen(navController: NavHostController) {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // LazyColumn for Events
+        // Events section
         Text(
             text = "Events for ${selectedDate.format(DateTimeFormatter.ISO_DATE)}",
             style = MaterialTheme.typography.headlineMedium,
@@ -97,15 +106,15 @@ fun CalendarScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             items(eventsForSelectedDate) { event ->
-                EventItem(event = event, onClick = {
-                    // Handle event click if needed
-                })
+                EventItem1(
+                    event = event,
+                    onClick = { /* Handle event click if needed */ }
+                )
             }
         }
     }
 }
 
-// Custom Calendar Grid
 @SuppressLint("NewApi")
 @Composable
 fun CalendarGrid(
@@ -121,47 +130,78 @@ fun CalendarGrid(
     val firstDayOfWeek = firstDayOfMonth.dayOfWeek.value
     val totalDaysInMonth = lastDayOfMonth.dayOfMonth
 
-    val days = mutableListOf<LocalDate>()
-    // Add blank days to the beginning of the grid (to align the first day with the correct weekday)
-    for (i in 1 until firstDayOfWeek) {
-        days.add(LocalDate.MIN)  // Add empty days
-    }
-    // Add the actual days of the month
-    for (day in 1..totalDaysInMonth) {
-        days.add(LocalDate.of(currentYear, currentMonth, day))
+    // Prepare days for the grid
+    val days = mutableListOf<LocalDate>().apply {
+        // Add blank days to align the first day correctly
+        repeat(firstDayOfWeek - 1) { add(LocalDate.MIN) }
+
+        // Add actual days of the month
+        for (day in 1..totalDaysInMonth) {
+            add(LocalDate.of(currentYear, currentMonth, day))
+        }
     }
 
-    // Display the calendar
     Column {
         // Weekday header
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            DayOfWeek.values().forEach {
+            DayOfWeek.values().take(7).forEach { dayOfWeek ->
                 Text(
-                    text = it.name.take(3), // Show abbreviated weekday names (Mon, Tue, etc.)
+                    text = dayOfWeek.name.take(3),
                     modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
         }
 
-        // Grid of days
+        // Calendar Grid
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(7),
+            contentPadding = PaddingValues(vertical = 8.dp)
+        ) {
+            items(days) { date ->
+                if (date == LocalDate.MIN) {
+                    // Empty placeholder for days before the month starts
+                    Box(modifier = Modifier.size(48.dp))
+                } else {
+                    val isSelected = date == selectedDate
+                    val isToday = date == LocalDate.now()
 
-
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(
+                                color = when {
+                                    isSelected -> MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
+                                    isToday -> MaterialTheme.colorScheme.secondary.copy(alpha = 0.2f)
+                                    else -> Color.Transparent
+                                }
+                            )
+                            .clickable { onDateClick(date) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = date.dayOfMonth.toString(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = when {
+                                isSelected -> MaterialTheme.colorScheme.primary
+                                isToday -> MaterialTheme.colorScheme.secondary
+                                else -> MaterialTheme.colorScheme.onBackground
+                            }
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 
-// Sample Event Data
-data class Event1(
-    val date: LocalDate,  // Changed to LocalDate for consistency
-    val title: String,
-    val backgroundColor: Color
-)
-
 @Composable
-fun EventItem(
+fun EventItem1(
     event: Event1,
     onClick: () -> Unit
 ) {

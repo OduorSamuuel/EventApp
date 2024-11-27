@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.auth.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,13 +73,14 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     //coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.3")
-    implementation("io.github.boguszpawlowski.composecalendar:composecalendar:1.0.0")
+    //implementation("io.github.boguszpawlowski.composecalendar:composecalendar:1.0.0")
 
-
+    implementation("com.google.accompanist:accompanist-pager:0.28.0")
     // separate artifact with utilities for working with kotlinx-datetime
-    implementation("io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.3.0")
+    //implementation("io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.3.0")
     // Using the stable version of Compose Calendar
-    //implementation("com.kizitonwose.calendar:compose:2.6.0")
+    implementation("com.kizitonwose.calendar:compose:2.0.1")
+    implementation("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
 
     implementation("androidx.navigation:navigation-compose:2.8.3")
     implementation("androidx.core:core-splashscreen:1.0.0")
