@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.example.eventapp.Screen
 
 @Composable
 fun SchoolsScreen(
@@ -33,7 +34,7 @@ fun SchoolsScreen(
             .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
-        // Row for Back Icon
+        // Back Icon Row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -42,7 +43,7 @@ fun SchoolsScreen(
             horizontalArrangement = Arrangement.Start
         ) {
             Icon(
-                imageVector = Icons.Filled.ArrowBack, // Corrected icon import
+                imageVector = Icons.Filled.ArrowBack,
                 contentDescription = "Back",
                 modifier = Modifier
                     .size(24.dp)
@@ -51,7 +52,7 @@ fun SchoolsScreen(
             )
         }
 
-        // Row for Title
+        // Title Row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -67,22 +68,70 @@ fun SchoolsScreen(
             )
         }
 
-        // LazyColumn for Event Items
+        // LazyColumn for Events
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(events) { event ->
+            items(events1) { event ->
                 EventItem(
                     event = event,
                     onClick = {
-                        // TODO: Implement navigation to event details
-                        // Example: navController.navigate("event_details/${event.title}")
+                        // Navigate to EventScreen with event details
+                        navController.navigate(
+                            Screen.Events.createRoute(
+                                event.title,
+                                event.date,
+                                event.location
+                            )
+                        )
                     }
                 )
             }
         }
     }
 }
+
+// Sample events with additional data
+private val events1 = listOf(
+    Event2(
+        icon = Icons.Filled.School,
+        title = "Graduation Day",
+        date = "2024-12-01",
+        location = "Main Auditorium",
+        backgroundColor = Color(0xFFE6F2FF)
+    ),
+    Event2(
+        icon = Icons.Filled.Star,
+        title = "Prize Giving",
+        date = "2024-12-15",
+        location = "Hall B",
+        backgroundColor = Color(0xFFFFF3E0)
+    ),
+    Event2(
+        icon = Icons.Filled.Sports,
+        title = "Sports Day",
+        date = "2025-01-10",
+        location = "Sports Complex",
+        backgroundColor = Color(0xFFF0F4F8)
+    ),
+    Event2(
+        icon = Icons.Filled.EmojiEvents,
+        title = "Sports Gala",
+        date = "2025-01-20",
+        location = "Stadium",
+        backgroundColor = Color(0xFFF0E6FF)
+    )
+)
+
+// Updated Event data class
+data class Event2(
+    val icon: ImageVector,
+    val title: String,
+    val date: String,
+    val location: String,
+    val backgroundColor: Color
+)
+
 
 private val events = listOf(
     Event(
@@ -109,7 +158,7 @@ private val events = listOf(
 
 @Composable
 private fun EventItem(
-    event: Event,
+    event: Event2,
     onClick: () -> Unit
 ) {
     Surface(

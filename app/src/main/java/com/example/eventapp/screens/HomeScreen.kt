@@ -73,15 +73,20 @@ fun ScrollableContent(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState()) // Enable scrolling for this content
-            .padding(top = 56.dp, start = 16.dp, end = 16.dp) // Combine padding into one modifier
+            .verticalScroll(rememberScrollState())
+            .padding(top = 56.dp, bottom = 56.dp) /// Adjust padding as needed
     ) {
-        Spacer(modifier = Modifier.height(16.dp))
-        SchoolsSection(navController)
-        Spacer(modifier = Modifier.height(16.dp))
-        EventsSection(navController)
-        Spacer(modifier = Modifier.height(16.dp))
-        MostRecentSection(navController)
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            SchoolsSection(navController)
+            Spacer(modifier = Modifier.height(16.dp))
+            EventsSection(navController)
+            Spacer(modifier = Modifier.height(16.dp))
+            MostRecentSection(navController)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
     }
 }
 

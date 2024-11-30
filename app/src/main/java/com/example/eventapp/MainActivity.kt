@@ -48,7 +48,7 @@ fun EventHubApp(
     navController: NavHostController = rememberNavController()
 ) {
     EventAppTheme {
-        // Your app content here
+
         NavigationComponent(navController = navController)
     }
 }
